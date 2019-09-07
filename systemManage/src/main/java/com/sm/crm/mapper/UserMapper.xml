@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sm.crm.mapper.UserMapper">
+    <resultMap id="user" type="com.sm.crm.entity.User">
+        <id property="uid" column="uid"/>
+        <result property="userName" column="user_name"/>
+        <result property="password" column="password"/>
+        <result property="creatDate" column="creat_date"/>
+        <result property="realName" column="real_name"/>
+        <result property="gender" column="gender"/>
+        <result property="gender" column="gender"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="depaId" column="depa_id"/>
+    </resultMap>
+
+    <select id="findUser" resultMap="user" parameterType="com.sm.crm.entity.User">
+        select * from user
+        <where>
+            <if test="uid!=null">
+                uid=#{uid}
+            </if>
+            <if test="userName!=null">
+                and user_name=#{userName}
+            </if>
+            <if test="password!=null">
+                and password=#{password}
+            </if>
+            <if test="depaId!=null">
+                and depa_id = #{depaId}
+            </if>
+        </where>
+    </select>
+
+</mapper>
