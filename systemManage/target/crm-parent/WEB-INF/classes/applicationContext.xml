@@ -12,6 +12,7 @@
         <property name="username" value="${sql.username}"/>
         <property name="password" value="${sql.password}"/>
     </bean>
+
     <bean id="sqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!--<property name="configLocation" value="classpath*:spring-mybatis-config.xml"/>-->
         <property name="dataSource" ref="dataSource"/>
@@ -25,6 +26,8 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
+
     <tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager"/>
     <aop:aspectj-autoproxy proxy-target-class="true"/>
+
 </beans>
