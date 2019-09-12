@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sm.crm.mapper.RoleMapper">
+    <resultMap id="role" type="com.sm.crm.entity.Role">
+        <id property="roleId" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleDes" column="role_des"/>
+        <result property="roleState" column="role_state"/>
+        <result property="depaId" column="depa_id"/>
+        <result property="depaName" column="depa_name"/>
+    </resultMap>
+
+    <insert id="updateRoleRight">
+        insert into role_right(role_id,right_id) values
+        <foreach collection="rights" index="index" item="item" separator=",">
+            (#{roleId},#{item})
+        </foreach>
+    </insert>
+
+    <select id="findRoleByUser" resultMap="role">
+        SELECT * FROM role r,user u,user_role rr where u.uid= rr.uid and rr.role_id=r.role_id
+    </select>
+
+    <select id="findAllRole" resultMap="role">
+        SELECT *  FROM role left join department on role.depa_id = department.depa_id
+    </select>
+
+    <delete id="deleteRoleRightById" parameterType="int">
+        delete from role_right where role_id=#{roleId}
+    </delete>
+
+    <delete id="deleteRoleByRoleId" parameterType="int">
+        delete from role where role_id=#{roleId}
+    </delete>
+
+    <select id="findRoleById" parameterType="java.lang.Integer" resultMap="role">
+        select * from role where role_id=#{roleId}
+    </select>
+
+    <insert id="addRole" parameterType="com.sm.crm.entity.Role">
+        insert into role (role_name,role_des,role_state,depa_id) values (#{roleName},#{roleDes},#{roleState},#{depaId});
+    </insert>
+
+    <update id="updateRole" parameterType="com.sm.crm.entity.Role">
+        update role
+        <set>
+            <if test="roleName!=null and roleName!=''">
+                role_name=#{roleName},
+            </if>
+            <if test="roleDes!=null and roleDes!=''">
+                role_des=#{roleDes},
+            </if>
+            <if test="roleState!=null and roleState!=''">
+                role_state=#{roleState} ,
+            </if>
+            <if test="depaId!=null and depaId!=''">
+                depa_id=#{depaId}
+            </if>
+        </set>
+        where role_id=#{roleId}
+    </update>
+</mapper>

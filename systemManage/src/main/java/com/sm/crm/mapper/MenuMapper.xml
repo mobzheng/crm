@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sm.crm.mapper.MenuMapper">
+    <resultMap id="menu" type="com.sm.crm.entity.Menu">
+        <id property="menuId" column="menu_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="menuUrl" column="menu_url"/>
+        <result property="pid" column="pid"/>
+        <collection property="children" column="menu_id" ofType="com.sm.crm.entity.Menu" select="getMenuByPid"/>
+    </resultMap>
+
+    <select id="getMenuByPid" parameterType="long" resultMap="menu">
+        select * from
+        menu m
+       WHERE  m.pid = #{menuId}
+    </select>
+
+
+    <select id="findMenu" resultMap="menu" parameterType="com.sm.crm.entity.User">
+        SELECT m.* from
+        user_role ur,role_right rr,right_menu rm,menu m
+        WHERE
+        <if test="uid!=null">
+        ur.uid = #{uid}
+        AND
+        </if>
+        ur.role_id = rr.role_id
+        and
+        rr.right_id = rm.right_id
+        and
+        rm.menu_id = m.menu_id
+        AND
+        m.pid = 0
+    </select>
+
+
+    <select id="findMenusByrid" parameterType="int" resultMap="menu">
+        SELECT m.* from
+       right_menu rm,menu m
+        WHERE
+        rm.right_id = #{rid}
+        and
+        rm.menu_id = m.menu_id
+        AND
+        m.pid = 0
+    </select>
+</mapper>

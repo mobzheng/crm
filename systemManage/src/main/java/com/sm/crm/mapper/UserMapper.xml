@@ -13,13 +13,14 @@
         <result property="phone" column="phone"/>
         <result property="email" column="email"/>
         <result property="depaId" column="depa_id"/>
+        <result property="depaName" column="depa_name"/>
     </resultMap>
 
     <select id="findUser" resultMap="user" parameterType="com.sm.crm.entity.User">
-        select * from user
+        select user.*,d.depa_name from `user` left join department d on d.depa_id = user.depa_id
         <where>
             <if test="uid!=null">
-                uid=#{uid}
+                user.uid=#{uid}
             </if>
             <if test="userName!=null">
                 and user_name=#{userName}
@@ -28,9 +29,70 @@
                 and password=#{password}
             </if>
             <if test="depaId!=null">
-                and depa_id = #{depaId}
+                and user.depa_id = #{depaId}
+            </if>
+            <if test="phone!=null">
+                and phone = #{phone}
             </if>
         </where>
     </select>
 
+
+    <select id="findUserList" resultMap="user">
+        select user.*,d.depa_name from `user` left join department d on d.depa_id = user.depa_id
+        <where>
+            <if test="uid!=null and uid!=''">
+                and user.uid=#{uid}
+            </if>
+            <if test="userName!=null and userName!=''">
+                and user.user_name=#{userName}
+            </if>
+            <if test="password!=null and password!=''">
+                and user.password=#{password}
+            </if>
+            <if test="depaId!=null and depaId!=''">
+                and user.depa_id = #{depaId}
+            </if>
+            <if test="phone!=null and phone!=''">
+                and user.phone = #{phone}
+            </if>
+            <if test="gender!=null and gender!=''">
+                and user.gender = #{gender}
+            </if>
+        </where>
+        order by uid
+    </select>
+
+    <insert id="addUser" parameterType="com.sm.crm.entity.User">
+        insert into user(user_name,password,creat_date,real_name,gender,phone,email,depa_id) values
+        (
+        #{userName},
+        #{password},
+        now(),
+        #{realName},
+        #{gender},
+        #{phone},
+        #{email},
+        #{depaId}
+        )
+    </insert>
+
+
+    <update id="updateUser" parameterType="com.sm.crm.entity.User">
+        update `user` set
+        user_name=#{userName},
+        password=#{password},
+        real_name=#{realName},
+        gender=#{gender},
+        phone=#{phone},
+        email=#{email},
+        depa_id=#{depaId}
+        where
+        uid=#{uid}
+
+    </update>
+
+    <delete id="deleteUser" parameterType="int">
+        delete from user where  uid=#{uid}
+    </delete>
 </mapper>

@@ -10,9 +10,9 @@ public interface UserMapper {
 
     List<User> findUserList(User user);
 
-    void addUser(User user);
+    int addUser(User user);
 
-    void updateUser(User user);
+    int updateUser(User user);
 
-    void deleteUser(User user);
+    int deleteUser(Integer uid);
 }

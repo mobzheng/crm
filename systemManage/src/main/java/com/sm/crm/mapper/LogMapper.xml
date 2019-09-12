@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sm.crm.mapper.LogMapper">
+    <resultMap id="log" type="com.sm.crm.entity.Log">
+        <id property="logId" column="log_id"/>
+        <result property="userName" column="user_name"/>
+        <result property="visitModel" column="visit_model"/>
+        <result property="visitTime" column="visit_time"/>
+        <result property="behaviour" column="behaviour"/>
+    </resultMap>
+
+    <insert id="insertLog" parameterType="com.sm.crm.entity.Log">
+           insert into log(user_name,visit_model,visit_time,behaviour) VALUES(#{userName},#{visitModel},now(),#{behaviour})
+    </insert>
+
+    <select id="findAllLogs" resultMap="log">
+        SELECT * FROM log
+    </select>
+
+</mapper>

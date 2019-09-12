@@ -14,8 +14,6 @@ public class Menu {
 
     private Long pid;
 
-    private Menu menu;//父级菜单
-
-    private List<Menu> menus;//子菜单
+    private List<Menu> children;//子菜单
 
 }
