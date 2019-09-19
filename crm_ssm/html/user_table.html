@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>尚马CRM系统</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../css/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../css/page.css" rel="stylesheet" type="text/css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+        #pagination {
+            float: right;
+            margin-right: 30px;
+        }
+    </style>
+</head>
+<div id="user_table">
+    <div>
+        <!-- 查询表单-->
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <form class="form-inline" @submit.prevent id="searchForm">
+                    <div class="form-group">
+                        <label for="uid">编号</label>
+                        <input type="text" v-model="user.uid" class="form-control" id="uid">
+                    </div>
+                    <div class="form-group">
+                        <label for="userName">用户名</label>
+                        <input type="text" v-model="user.userName" class="form-control" id="userName">
+                    </div>
+                    <div class="form-group">
+                        <label for="realName">真实姓名</label>
+                        <input type="text" v-model="user.realName" class="form-control" id="realName">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">性别</label>
+                        <select class="form-control" v-model="user.gender" id="gender" placeholder="性别">
+                            <option value="">--请选择--</option>
+                            <option value="male">男</option>
+                            <option value="female">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">手机号码</label>
+                        <input type="text" v-model="user.phone" id="phone" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="depaId">所属部门</label>
+                        <select class="form-control" v-model="user.depaId" id="depaId" placeholder="所属部门">
+                            <option value="">--请选择--</option>
+                            <option v-for="(item,index) in departments" :value="item.depaId">{{item.depaName}}</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary" @click="search">查询</button>
+                </form>
+            </div>
+        </div>
+        <!--列表展示-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">客户信息列表</div>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>用户名</th>
+                            <th>用户密码</th>
+                            <th>注册时间</th>
+                            <th>真实姓名</th>
+                            <th>性别</th>
+                            <th>手机号码</th>
+                            <th>邮箱</th>
+                            <th>所属部门</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,index) in users" :key="index">
+                            <td>{{item.uid}}</td>
+                            <td>{{item.userName}}</td>
+                            <td>{{item.password}}</td>
+                            <td>{{item.creatDate}}</td>
+                            <td>{{item.realName}}</td>
+                            <td>{{item.gender}}</td>
+                            <td>{{item.phone}}</td>
+                            <td>{{item.email}}</td>
+                            <td>{{item.depaName}}</td>
+                            <td>
+                                <button class="btn btn-success" @click="updateuser(item.uid)">修改</button>
+                                <button class="btn btn-danger" @click="deleteuser(item.uid)">删除</button>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="box" id="box"></div>
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- 删除对话框提示 -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>温馨提示</h4>
+                </div>
+                <div class="modal-body">
+                    <strong>你确定删除这条记录吗?</strong>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 编辑对话框 -->
+    <div class="modal fade" id="userEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">修改用户信息</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" id="edit_customer_form">
+
+                        <div class="form-group">
+                            <label for="edit_customerName" class="col-sm-2 control-label">编号</label>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="user.uid" class="form-control" id="edit_customerName"
+                                       placeholder="编号"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_customerName3" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="user.userName" class="form-control" id="edit_customerName3"
+                                       placeholder="用户密码"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_customerName2" class="col-sm-2 control-label">注册时间</label>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="user.creatDate" class="form-control" id="edit_customerName2"
+                                       placeholder="注册时间"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_customerName1" class="col-sm-2 control-label">真实姓名</label>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="user.realName" class="form-control" id="edit_customerName1"
+                                       placeholder="真实姓名"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_customerFrom" style="float:left;padding:7px 15px 0 27px;">性别</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" v-model="user.gender" id="edit_customerFrom"
+                                        placeholder="用户名"/>
+                                <option value="">--请选择--</option>
+                                <option value="male">男</option>
+                                <option value="female">女</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_phone" class="col-sm-2 control-label">手机号码</label>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="user.phone" class="form-control" id="edit_phone"
+                                       placeholder="手机号码"
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_phone1" class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-10">
+                                <input type="text" v-model="user.email" class="form-control" id="edit_phone1"
+                                       placeholder="邮箱"
+                                />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_custLevel" style="float:left;padding:7px 15px 0 27px;">所属部门</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" v-model="user.depaId" id="edit_custLevel">
+                                    <option value="">--请选择--</option>
+                                    <option v-for="(item,index) in departments" :value="item.depaId" :key="index">
+                                        {{item.depaName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="saveChange">保存修改</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!--页面结束-->
+
+<!-- jQuery -->
+<script src="../js/jquery-1.11.0.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/axios.js"></script>
+<script src="../js/vue2.js"></script>
+<script src="../js/page.js"></script>
+<script src="../js/user_table.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>INSPINIA | Register</title>
+
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.css" rel="stylesheet">
+    <link href="../css/custom.css" rel="stylesheet">
+    <link href="../css/animate.css" rel="stylesheet">
+    <link href="../css/style1.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+<div class="middle-box text-center loginscreen   animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name">---</h1>
+        </div>
+        <p>创建一个新账户</p>
+        <form class="m-t" role="form" action="login.html">
+            <div class="form-group">
+                <input type="text" class="form-control" v-model="user.userName" placeholder="用户名" required="">
+            </div>
+
+            <div class="form-group">
+                <input type="password" class="form-control" v-model="user.password" placeholder="密码" required="">
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" v-model="user.email" placeholder="邮箱" required="">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" v-model="user.realName" placeholder="真实姓名" required="">
+            </div>
+            <div class="form-group">
+                <select class="form-control" v-model="user.gender">
+                    <option value="" class="center-orientation">--请选择--</option>
+                    <option value="male">男</option>
+                    <option value="female">女</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" v-model="user.phone" placeholder="电话" required="">
+            </div>
+            <div class="form-group">
+                <select class="form-control" v-model="user.depaId">
+                    <option value="" class="center-orientation">--请选择--</option>
+                    <option v-for="(item,index) in department" :key="index" :value="item.depaId">{{item.depaName}}
+                    </option>
+                </select>
+                <!--<input type="text" class="form-control" v-model="user.depaId" placeholder="部门" required="">-->
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" v-model="code"  placeholder="验证码" required="">
+            </div>
+            <button type="button" class="btn btn-primary block full-width m-b" @click="getCode">获取验证码</button>
+            <button type="button" class="btn btn-primary block full-width m-b" @click="register">注册</button>
+
+        </form>
+        <p class="m-t">
+            <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small>
+        </p>
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="../js/icheck.min.js"></script>
+<script src="../js/axios.js"></script>
+<script src="../js/vue2.js"></script>
+<script src="../js/register.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.i-checks').iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+        });
+    });
+</script>
+</body>
+
+</html>

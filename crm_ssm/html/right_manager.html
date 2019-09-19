@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <meta content="email=no" name="format-detection"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" name="viewport"/>
+    <title>权限修改</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css"/>
+</head>
+<body>
+<div class="row" id="right_manage">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">权限列表</div>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>权限id</th>
+                    <th>权限名称</th>
+                    <th>权限描述</th>
+                    <th>权限状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="(item,index) in rights" :key="index">
+                    <td>{{item.rid}}</td>
+                    <td>{{item.rname}}</td>
+                    <td>{{item.rdes}}</td>
+                    <td>{{item.rStateStr}}</td>
+                    <td>
+                        <button class="btn btn-success" @click="updaterole(item.rid)">修改</button>
+                        <button class="btn btn-danger" @click="getDetail(item.rid)">详细信息</button>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="box" id="box"></div>
+    </div>
+
+    <div class="modal fade in" id="roleEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">修改权限</h4>
+                </div>
+                <div class="modal-body">
+                    <form @submit.prevent id="my_form">
+                        <div id="tree_list">
+                            <input type="hidden" :value="rid" name="rid">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" @click="saveChange()">保存修改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+<script src="../js/verTree.js"></script>
+<script src="../js/jquery-1.11.0.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+
+<script src="../js/data.js"></script>
+<script src="../js/vue2.js"></script>
+<script src="../js/axios.js"></script>
+<script src="../js/right.js"></script>
+
+</html>
