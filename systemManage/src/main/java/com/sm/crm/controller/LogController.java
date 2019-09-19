@@ -2,6 +2,7 @@ package com.sm.crm.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.sm.crm.entity.Log;
+import com.sm.crm.entity.User;
 import com.sm.crm.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import javax.xml.ws.Response;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/log")
 public class LogController {
 

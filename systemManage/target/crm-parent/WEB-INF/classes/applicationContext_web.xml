@@ -7,18 +7,32 @@
 
     <context:component-scan base-package="com.sm.crm.controller"/>
     <context:component-scan base-package="com.sm.crm.aop"/>
-    <aop:aspectj-autoproxy proxy-target-class="true" />
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
     <mvc:annotation-driven/>
     <mvc:default-servlet-handler/>
+
+
+    <!--<mvc:exclude-mapping path="/user/login/*"/>
+            <mvc:exclude-mapping path="/user/addUser"/>
+            <mvc:exclude-mapping path="/department/findAll"/>-->
 
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/user/login"/>
-            <mvc:exclude-mapping path="/user/addUser"/>
-            <mvc:exclude-mapping path="/department/findAll"/>
             <bean class="com.sm.crm.intercepter.MyIntercepter"/>
         </mvc:interceptor>
     </mvc:interceptors>
+
+    <mvc:cors>
+        <mvc:mapping path="/**"/>
+    </mvc:cors>
+    <bean class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="com.sm.crm.utils.DateConverter"/>
+            </set>
+        </property>
+    </bean>
     <bean class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 </beans>

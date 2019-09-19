@@ -18,6 +18,7 @@ public class Right {
 
     private List<Menu> menus;//权限详情
 
+    private List<Role> roles;//权限所属的角色
     public String getrStateStr() {
         return rState == 0 ? "无效" : "有效";
     }

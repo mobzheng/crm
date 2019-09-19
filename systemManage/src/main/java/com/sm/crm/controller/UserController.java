@@ -4,20 +4,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageInfo;
 import com.sm.crm.entity.User;
 import com.sm.crm.service.UserService;
+import com.sm.crm.utils.JedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.xml.ws.Response;
+import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
  * 用户controller层
  */
-@CrossOrigin
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -27,18 +33,16 @@ public class UserController {
 
     /**
      * 用户登录
-     *
      * @param request
-     * @param response
      * @param user
      * @return
      */
     @PostMapping("login")
-    public ResponseEntity<String> login(HttpServletRequest request, HttpServletResponse response, @RequestBody User user) {
+    public ResponseEntity<String> login(HttpServletRequest request, @RequestBody User user) {
         User user1 = userService.findUser(user);
-        request.getSession().setAttribute("user", user1);
-        String message = user1 == null ? "success" : "fail";
-        return ResponseEntity.ok("success");
+        request.getSession().setAttribute("user",user1);
+        String message = user1 == null ? "fail" : "success";
+        return ResponseEntity.ok(message);
     }
 
     /**
@@ -75,9 +79,14 @@ public class UserController {
      * @return
      */
     @PostMapping("addUser")
-    public ResponseEntity<String> addUser(@RequestBody User user) {
-        userService.addUser(user);
-        return ResponseEntity.ok("success");
+    public ResponseEntity<String> addUser(@RequestBody User user, String code) {
+        Jedis jedis = JedisUtil.getJedis();
+        if (code.equals(jedis.get(user.getEmail()))) {
+            jedis.del(user.getEmail());
+            jedis.close();
+            return ResponseEntity.ok(userService.addUser(user) == 0 ? "failed" : "success");
+        }
+        return ResponseEntity.ok("验证码错误");
     }
 
 
@@ -101,8 +110,10 @@ public class UserController {
      * @return
      */
     @PostMapping("findUsers")
-    public ResponseEntity<List<User>> findUsers(@RequestBody User user, @RequestParam Integer currentPage, @RequestParam Integer pageSize) {
+    public ResponseEntity<List<User>> findUsers(@RequestBody User user, Integer currentPage, Integer pageSize) {
         List<User> users = userService.findUsers(user);
         return ResponseEntity.ok(users);
     }
+
+
 }

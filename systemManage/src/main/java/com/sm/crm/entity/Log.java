@@ -2,10 +2,7 @@ package com.sm.crm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.sm.crm.utils.DateConver;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
+import com.sm.crm.utils.DateJsonSerializer;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,8 +14,8 @@ public class Log {
 
     private String visitModel;//访问模块
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonSerialize(using = DateConver.class)
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonSerialize(using = DateJsonSerializer.class)
     private Date visitTime;//访问时间
 
     private String behaviour;//行为

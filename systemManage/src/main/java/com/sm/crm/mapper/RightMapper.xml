@@ -7,11 +7,13 @@
         <result property="rName" column="r_name"/>
         <result property="rDes" column="r_des"/>
         <result property="rState" column="r_state"/>
+        <collection property="roles" ofType="com.sm.crm.entity.Role"
+                 column="rid"   select="com.sm.crm.mapper.RoleMapper.findRoleByRightId"/>
     </resultMap>
 
-    <update id="insertLog" parameterType="com.sm.crm.entity.Log">
-           insert into log(user_name,visit_model,visit_time,behaviour) VALUES(#{userName},#{visitModel},now(),#{behaviour})
-    </update>
+    <select id="findRightByRoleId" resultMap="right">
+        select * from `right` r right join role_right rr on r.rid=rr.right_id where rr.role_id=#{role_id}
+    </select>
 
     <select id="findAllRights" resultMap="right">
         SELECT * FROM `right`

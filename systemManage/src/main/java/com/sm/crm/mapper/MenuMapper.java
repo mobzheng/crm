@@ -9,4 +9,5 @@ public interface MenuMapper {
     List<Menu> findMenu(User user);
 
     List<Menu> findMenusByrid(Integer rid);
+
 }

@@ -2,6 +2,9 @@ package com.sm.crm.entity;
 
 import lombok.Data;
 
+import javax.jws.soap.SOAPBinding;
+import java.util.List;
+
 @Data
 public class Role {
     private Long roleId;//角色id
@@ -16,6 +19,9 @@ public class Role {
     private Integer depaId;//所属部门
     private String depaName;//所属部门
 
+    private List<User> users;//该角色下的用户
+
+    private List<Right> rights;//角色拥有的权限
     public String getRoleStateName() {
         return roleState==0?"无效":"有效";
     }

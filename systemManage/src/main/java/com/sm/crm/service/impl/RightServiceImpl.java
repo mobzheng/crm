@@ -31,6 +31,7 @@ public class RightServiceImpl implements RightService {
      */
     @Override
     public int updateRightMenu(Integer rid, Integer[] menuId) {
+
         return rightMapper.updateRightMenu(rid,menuId);
     }
 

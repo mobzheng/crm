@@ -2,12 +2,13 @@ package com.sm.crm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.sm.crm.utils.DateConver;
+import com.sm.crm.utils.DateJsonSerializer;
+import lombok.Builder;
 import lombok.Data;
 
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @Data
 public class User {
@@ -17,8 +18,7 @@ public class User {
 
     private String password;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonSerialize(using = DateConver.class)
+    @JsonSerialize(using = DateJsonSerializer.class)
     private Date creatDate;
 
     private String realName;
@@ -33,9 +33,6 @@ public class User {
 
     private String depaName;
 
-    private List<Role> roles;//用户拥有的角色
+    private Role role;//用户拥有的角色
 
-    public String getGender() {
-        return "male".equals(gender)?"女":"男";
-    }
 }

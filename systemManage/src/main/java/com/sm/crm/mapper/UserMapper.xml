@@ -15,28 +15,36 @@
         <result property="depaId" column="depa_id"/>
         <result property="depaName" column="depa_name"/>
     </resultMap>
+    <resultMap id="alluser" type="com.sm.crm.entity.Role" extends="user">
+        <association property="role" select="com.sm.crm.mapper.RoleMapper.findRoleByUser" column="{uid=uid}"/>
+    </resultMap>
 
     <select id="findUser" resultMap="user" parameterType="com.sm.crm.entity.User">
         select user.*,d.depa_name from `user` left join department d on d.depa_id = user.depa_id
         <where>
-            <if test="uid!=null">
+            <if test="uid!=null and uid!=''">
                 user.uid=#{uid}
             </if>
-            <if test="userName!=null">
+            <if test="userName!=null and userName!=''">
                 and user_name=#{userName}
             </if>
-            <if test="password!=null">
+            <if test="password!=null and password!=''">
                 and password=#{password}
             </if>
-            <if test="depaId!=null">
+            <if test="depaId!=null and depaId!=''">
                 and user.depa_id = #{depaId}
             </if>
-            <if test="phone!=null">
+            <if test="phone!=null and phone!=''">
                 and phone = #{phone}
             </if>
         </where>
     </select>
 
+
+    <select id="findUserByRoleId" resultMap="user">
+        select user.*,d.depa_name from `user` left join user_role ur on ur.uid=user.uid
+           left join department d on d.depa_id = user.depa_id where   ur.role_id = #{roleId}
+    </select>
 
     <select id="findUserList" resultMap="user">
         select user.*,d.depa_name from `user` left join department d on d.depa_id = user.depa_id

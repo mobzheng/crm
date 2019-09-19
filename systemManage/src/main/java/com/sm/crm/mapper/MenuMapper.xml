@@ -10,6 +10,9 @@
         <collection property="children" column="menu_id" ofType="com.sm.crm.entity.Menu" select="getMenuByPid"/>
     </resultMap>
 
+    <resultMap id="menuIds" type="com.sm.crm.entity.Menu">
+        <result property="menuId" column="menu_id"/>
+    </resultMap>
     <select id="getMenuByPid" parameterType="long" resultMap="menu">
         select * from
         menu m
@@ -19,30 +22,29 @@
 
     <select id="findMenu" resultMap="menu" parameterType="com.sm.crm.entity.User">
         SELECT m.* from
-        user_role ur,role_right rr,right_menu rm,menu m
-        WHERE
-        <if test="uid!=null">
-        ur.uid = #{uid}
-        AND
+        menu m
+        <if test="uid!=null and uid!=''">
+            ,user_role ur,role_right rr,right_menu rm
         </if>
-        ur.role_id = rr.role_id
-        and
-        rr.right_id = rm.right_id
-        and
-        rm.menu_id = m.menu_id
-        AND
+        WHERE
+        <if test="uid!=null and uid!=''">
+            ur.uid = #{uid}
+            AND
+            ur.role_id = rr.role_id
+            and
+            rr.right_id = rm.right_id
+            and
+            rm.menu_id = m.menu_id
+            AND
+        </if>
         m.pid = 0
     </select>
 
 
-    <select id="findMenusByrid" parameterType="int" resultMap="menu">
-        SELECT m.* from
-       right_menu rm,menu m
+    <select id="findMenusByrid" parameterType="int" resultMap="menuIds">
+        SELECT rm.* from
+          right_menu rm
         WHERE
-        rm.right_id = #{rid}
-        and
-        rm.menu_id = m.menu_id
-        AND
-        m.pid = 0
+          rm.right_id = #{rid}
     </select>
 </mapper>

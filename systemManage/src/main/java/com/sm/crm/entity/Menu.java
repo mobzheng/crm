@@ -16,4 +16,6 @@ public class Menu {
 
     private List<Menu> children;//子菜单
 
+    private List<Right> rights;//菜单所属的权限
+
 }

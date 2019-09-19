@@ -9,8 +9,13 @@
         <result property="roleState" column="role_state"/>
         <result property="depaId" column="depa_id"/>
         <result property="depaName" column="depa_name"/>
+        <collection property="users" column="{roleId=role_id}" ofType="com.sm.crm.entity.User"
+                    select="com.sm.crm.mapper.UserMapper.findUserByRoleId"/>
     </resultMap>
-
+    <resultMap id="role_right" type="com.sm.crm.entity.Role" extends="role">
+        <collection property="rights" ofType="com.sm.crm.entity.Right" column="role_id"
+                    select="com.sm.crm.mapper.RightMapper.findRightByRoleId"/>
+    </resultMap>
     <insert id="updateRoleRight">
         insert into role_right(role_id,right_id) values
         <foreach collection="rights" index="index" item="item" separator=",">
@@ -18,8 +23,13 @@
         </foreach>
     </insert>
 
-    <select id="findRoleByUser" resultMap="role">
-        SELECT * FROM role r,user u,user_role rr where u.uid= rr.uid and rr.role_id=r.role_id
+    <select id="findRoleByRightId" resultMap="role">
+        select * from role_right rr left join role r on rr.role_id=r.role_id
+        where rr.right_id=#{rid}
+    </select>
+
+    <select id="findRoleByUser" resultMap="role_right">
+        SELECT * FROM role r,user_role rr where rr.role_id=r.role_id and rr.uid=#{uid}
     </select>
 
     <select id="findAllRole" resultMap="role">

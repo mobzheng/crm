@@ -1,6 +1,7 @@
 package com.sm.crm.controller;
 
 import com.sm.crm.entity.Right;
+import com.sm.crm.entity.User;
 import com.sm.crm.service.RightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
